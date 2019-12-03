@@ -1,0 +1,215 @@
+<odoo>
+    <data>
+
+        <template id="emerald_report_invoice_document">
+            <t t-call="web.external_layout">
+                <t t-set="o" t-value="o.with_context(lang=lang)" />
+                <t t-set="address">
+                    <address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+                    <div t-if="o.partner_id.vat" class="mt16"><t t-esc="o.company_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="o.partner_id.vat"/></div>
+                </t>
+                <div class="page">
+                    <!-- <h2>
+                        <span t-if="o.type == 'out_invoice' and o.state in ('open', 'in_payment', 'paid')">Invoice</span>
+                        <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
+                        <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
+                        <span t-if="o.type == 'out_refund'">Credit Note</span>
+                        <span t-if="o.type == 'in_refund'">Vendor Credit Note</span>
+                        <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
+                        <span t-field="o.number"/>
+                    </h2> -->
+                    <div class="" t-if="o.reference" name="reference">
+                        <p><strong>Period:</strong> <span t-field="o.reference"/></p>
+                    </div>
+         
+                    <div class="" t-if="o.invoice_line_ids" name="property">
+                        <p><strong>Property:</strong> <span t-esc="o.get_analytic_name(o)"/></p>
+                    </div>
+
+                    <div t-if="o.date_invoice" name="date_invoice">
+                        <p><strong>Date:</strong> <span t-field="o.date_invoice"/></p>
+                    </div>
+
+                    <t t-set="display_discount" t-value="any([l.discount for l in o.invoice_line_ids])"/>
+
+                    <table class="table table-condensed" name="invoice_line_table">
+                        <thead>
+                            <tr>
+                                
+                            </tr>
+                        </thead>
+                        <tbody class="invoice_tbody">
+
+                            <t t-foreach="o.design_line_item(o)['one']" t-as="line">
+                              
+                                <tr>
+                                    <t name="account_invoice_line_accountable">
+                                        <td name="account_invoice_line_name"><span t-esc="line['name']"/></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right o_price_total">
+                                            <span t-esc="line['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </t>
+                            <t t-foreach="o.design_line_item(o)['label1']" t-as="line">
+                              
+                                <tr>
+                                    <td><strong><span t-esc="line['name']"/></strong></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-right o_price_total">
+                                        <strong><span t-esc="line['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></strong>
+                                    </td>
+                                </tr>
+                            </t>
+                            <t t-foreach="o.design_line_item(o)['two']" t-as="line">
+                              
+                                <tr>
+                                    <td><span t-esc="line['name']"/></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><span t-esc="line['percentage']"/></td>
+                                    <td class="text-right o_price_total">
+                                        <span t-esc="line['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <t t-foreach="o.design_line_item(o)['label2']" t-as="line">
+                              
+                                <tr>
+                                    <td><strong><span t-esc="line['name']"/></strong></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-right o_price_total">
+                                        <strong><span t-esc="line['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></strong>
+                                    </td>
+                                </tr>
+                            </t>
+
+                            
+
+                        </tbody>
+                        
+
+                    </table>
+                    <strong><p><span t-esc="o.design_line_item(o)['label3']"/></p></strong>
+
+
+                    <table class="table table-condensed" name="invoice_line_table">
+                         <tbody class="invoice_tbody">
+                            <t t-foreach="o.design_line_item(o)['three']" t-as="line">
+                                <tr>
+                                    <td><span t-esc="line['name']"/></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-right o_price_total">
+                                        <span t-esc="line['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </td>
+                                </tr>
+
+                            </t>
+                            <t t-foreach="o.design_line_item(o)['label4']" t-as="line">
+                              
+                                <tr>
+                                    <td><strong><span t-esc="line['name']"/></strong></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-right o_price_total">
+                                        <strong><span t-esc="line['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></strong>
+                                    </td>
+                                </tr>
+                            </t>
+                            <t t-foreach="o.design_line_item(o)['label5']" t-as="line">
+                              
+                                <tr>
+                                    <td><span t-esc="line['name']"/></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-right o_price_total">
+                                        <span t-esc="line['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <t t-foreach="o.design_line_item(o)['label6']" t-as="line">
+                              
+                                <tr>
+                                    <td><strong><span t-esc="line['name']"/></strong></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-right o_price_total">
+                                        <strong><span t-esc="line['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></strong>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+
+                    <table class="table table-condensed" style="border: 2px solid black;">
+                        <tbody class="invoice_tbody">
+                            <t t-foreach="o.design_line_item(o)['label6']" t-as="line">
+                            <tr>
+                                <td><strong>Total to be paid</strong></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-right o_price_total">
+                                        <strong><span t-esc="line['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></strong>
+                                </td>
+
+                            </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+
+                   <strong>Detailed Description</strong>
+                   <br/>
+                    <p t-if="o.comment" name="comment">
+                        <span t-field="o.comment"/>
+                    </p>
+                </div>
+            </t>
+        </template>
+
+
+
+        <template id="report_invoice_emerald">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="lang" t-value="o.user_id.lang if o.type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
+                    <t t-call="p7_emerald_invoice.emerald_report_invoice_document" t-lang="lang"/>
+                </t>
+            </t>
+        </template>
+
+
+    </data>
+</odoo>
