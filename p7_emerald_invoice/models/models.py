@@ -87,8 +87,7 @@ class Account_invoice_extended(models.Model):
             for t in inv.tax_line_ids:
 
                 
-                t_dicts.append({t.tax_id.id:t.amount})
-
+                t_dicts.append({t.tax_id.id:abs(t.amount)})
         if t_dicts:
 
             result = dict(functools.reduce(operator.add,map(collections.Counter, t_dicts))) 
