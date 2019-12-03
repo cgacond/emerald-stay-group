@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
-import collections, functools, operator 
+# import collections, functools, operator 
+
+import collections
 class Account_invoice_extended(models.Model):
 
     _inherit = 'account.invoice'
@@ -87,11 +89,15 @@ class Account_invoice_extended(models.Model):
             for t in inv.tax_line_ids:
 
                 
-                t_dicts.append({t.tax_id.id:abs(t.amount)})
+                t_dicts.append({t.tax_id.id:t.amount})
         if t_dicts:
 
-            result = dict(functools.reduce(operator.add,map(collections.Counter, t_dicts))) 
-
+            counter = collections.Counter() 
+            for d in t_dicts:  
+                counter.update(d) 
+                
+            result = dict(counter) 
+      
         total_vat = 0
         if result != None:
 
