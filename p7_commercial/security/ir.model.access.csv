@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_p7_owner,P7 Owner,p7_commercial.model_p7_owner,,1,1,1,1
+access_p7_res_partner_bank,P7 Res Partner Bank,p7_commercial.model_p7_res_partner_bank,,1,1,1,1
+access_p7_owner_line,P7 Owner line,p7_commercial.model_p7_owner_line,,1,1,1,1
+access_p7_home,P7 Home,p7_commercial.model_p7_home,,1,1,1,1
+access_p7_contracts,P7 Contracts,p7_commercial.model_p7_contracts,,1,1,1,1
+access_rent_payments,Rent Payments,p7_commercial.model_rent_payments,,1,1,1,1
+access_variable_expense_estimate,Variable Expense Estimate,p7_commercial.model_variable_expense_estimate,,1,1,1,1
+access_fixed_expense_estimate,Fixed Expense Estimate,p7_commercial.model_fixed_expense_estimate,,1,1,1,1
+access_property_expense,Property Expense,p7_commercial.model_property_expense,,1,1,1,1

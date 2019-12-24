@@ -1,0 +1,9 @@
+<odoo>
+    <data>
+        <record id="p7_odoo_group" model="res.groups">
+            <field name="name">P7 Odoo App</field>
+        </record>
+    </data>
+</odoo>
+
+        

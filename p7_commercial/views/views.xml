@@ -1,0 +1,521 @@
+<odoo>
+  <data>
+
+  <!-- Tree view of Owner -->
+    <record model="ir.ui.view" id="p7_owner_tree">
+      <field name="name">Owners</field>
+      <field name="model">p7.owner</field>
+      <field name="arch" type="xml">
+          <tree default_order="registration_date">
+            <field name="name"/>
+            <field name="last_name"/>
+            <field name="company_name"/>
+            <field name="registration_number"/>
+            <field name="registration_place"/>
+            <field name="registration_date"/>
+            <field name="registration_capital"/>
+          </tree>
+      </field>
+    </record>
+
+
+  <!-- Tree view of Home -->
+    <record model="ir.ui.view" id="p7_home_tree">
+      <field name="name">Home</field>
+      <field name="model">p7.home</field>
+      <field name="arch" type="xml">
+          <tree>
+            <field name="name"/>
+            <field name="owner_id"/>
+            <field name="odoo_id"/>
+            <field name="distribution_name"/>
+            <field name="contractual_name"/>
+            <field name="cluster"/>
+            <field name="country"/>
+            <field name="interior_area"/>
+            <field name="exterior_area"/>
+            <field name="zoning_number"/>
+            <field name="zoning_section"/>
+            <field name="zoning_area"/>
+          </tree>
+      </field>
+    </record>
+
+  <!-- Tree view of contracts -->
+    <record model="ir.ui.view" id="p7_contracts_tree">
+      <field name="name">Contracts</field>
+      <field name="model">p7.contracts</field>
+      <field name="arch" type="xml">
+          <tree>
+            <field name="name"/>
+            <field name="home_id"/>
+            <field name="begin_date"/>
+            <field name="end_date"/>
+            <field name="notice_period"/>
+            <field name="break_possibility"/>
+            <field name="deposit"/>
+            <field name="fixed_annual_rent_ht"/>
+            <field name="variable_base"/>
+            <field name="variable_percentage"/>
+            <field name="vat_rate"/>
+            <field name="expense_electricity"/>
+            <field name="expense_water"/>
+            <field name="expense_gas"/>
+            <field name="expense_internet"/>
+            <field name="expense_ownershiptax"/>
+            <field name="owner_use"/>
+          </tree>
+      </field>
+    </record>
+
+
+  <!-- Tree view of rent payment -->
+    <record model="ir.ui.view" id="p7_rent_tree">
+      <field name="name">Rent Payments</field>
+      <field name="model">rent.payments</field>
+      <field name="arch" type="xml">
+          <tree>
+            <field name="contract_id"/>
+            <field name="rent_date"/>
+            <field name="name"/>
+            <field name="amount_ht"/>
+            <field name="amount_vat"/>
+            <field name="amount_ttc"/>
+          </tree>
+      </field>
+    </record>
+  
+  <!-- Tree view of property expense -->
+    <record model="ir.ui.view" id="p7_property_tree">
+      <field name="name">Property Expense</field>
+      <field name="model">property.expense</field>
+      <field name="arch" type="xml">
+          <tree>
+            <field name="name"/>
+            <field name="contract_id"/>
+            <field name="odoo_id"/>
+            <field name="supplier"/>
+            <field name="amount_ht"/>
+            <field name="vat_rate"/>
+            <field name="amount_ttc"/>
+            <field name="currency"/>
+            <field name="type"/>
+            <field name="account"/>
+            <field name="status"/>
+          </tree>
+      </field>
+    </record>
+
+
+  <!-- Tree view of Variable Expense Estimate -->
+    <record model="ir.ui.view" id="p7_variable_tree">
+      <field name="name">Variable Expense Estimate</field>
+      <field name="model">variable.expense.estimate</field>
+      <field name="arch" type="xml">
+          <tree>
+            <field name="home_id"/>
+            <field name="welcome_pack"/>
+            <field name="cleaning_per_stay"/>
+            <field name="linen_per_stay"/>
+            <field name="mid_week_per_stay"/>
+            <field name="hot_tub_per_stay"/>
+          </tree>
+      </field>
+    </record>
+  
+
+  <!-- Tree view of Fixed Expense Estimate -->
+    <record model="ir.ui.view" id="p7_expense_tree">
+      <field name="name">Fixed Expense Estimate</field>
+      <field name="model">fixed.expense.estimate</field>
+      <field name="arch" type="xml">
+          <tree>
+            <field name="home_id"/>
+            <field name="counci_tax"/>
+            <field name="sejour_tax"/>
+            <field name="rubbish_tax"/>
+          </tree>
+      </field>
+    </record>
+
+
+    <!-- Form view of owner -->
+    <record model="ir.ui.view" id="p7_owner_form">
+      <field name="name">Owners</field>
+      <field name="model">p7.owner</field>
+      <field name="arch" type="xml">
+        <form>
+          <header>
+            <button name="create_vendor" type="object" class="btn btn-primary" string="Create Vendor" attrs="{'invisible':[('is_partner','=', True)]}"/>
+          </header>
+          <sheet>      
+            <div class="oe_title">
+              <field name="company_type" widget="radio" class="oe_edit_only" options="{'horizontal': true}"/>
+            </div>
+              <group>
+              <group>
+                  <field name="name" attrs="{'invisible':[('company_type','=','company')],'required':[('company_type','=','person')]}"/>
+                  <field name="company_name" attrs="{'invisible':[('company_type','=','person')],'required':[('company_type','=','company')]}"/>
+                  <label for="street" string="Address"/>
+                  <div class="o_address_format"> 
+                      <field name="address_1" placeholder="Street..." class="o_address_street"/>
+                      <field name="address_2" placeholder="Street 2..." class="o_address_street"/>
+                      <field name="city" placeholder="City" class="o_address_city"/>
+                      <field name="state_id" class="o_address_state" placeholder="State" options="{&quot;no_open&quot;: True}" context="{'country_id': country, 'zip': zip}" domain="[('country_id','=?',country)]"/>
+                      <field name="zip" placeholder="ZIP" class="o_address_zip" />
+                      <field name="country" placeholder="Country" class="o_address_country" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                  </div>
+                  <field name="email_address"/>
+                  <field name="is_partner" invisible="1"/>
+                  <field name="partner_id" force_save="1" attrs="{'invisible':[('is_partner','=', False)]}"/>
+              </group>
+              <group>
+                  <field name="last_name" attrs="{'invisible':[('company_type','=','company')],'required':[('company_type','=','person')]}"/>
+                  <field name="registration_number"/>
+                  <field name="registration_place"/>
+                  <field name="registration_date"/>
+                  <field name="registration_capital"/>             
+              </group>
+              </group>
+              <notebook>
+                <page string="Owner Dashboard">
+                  <group>
+                    <group string="Home Details" name="accounting_entries" groups="account.group_account_user">
+                        <field name="line_ids" nolabel="1">
+                            <tree editable="bottom">
+                            <field name="home_id" options="{&quot;no_create&quot;: True}"/>
+                            <field name="contract_id" options="{&quot;no_create&quot;: True}"/>
+                            <field name="end_date"/>
+                            <field name="owner_id" invisible="1"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group string="Bank Accounts" name="banks" groups="account.group_account_invoice">
+                        <field name="bank_ids" nolabel="1">
+                            <tree editable='bottom'>
+                                <field name="bank_id"/>
+                                <field name="acc_number"/>
+                                <field name="owner_id" invisible="1"/>
+                            </tree>
+                        </field>
+                    </group>
+                  </group>
+                </page>
+              </notebook>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+
+
+  <!-- Form view of home -->
+   
+    <record model="ir.ui.view" id="p7_home_form">
+      <field name="name">Home</field>
+      <field name="model">p7.home</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+              <group>
+              <group>
+                  <field name="name"/>
+                  <label for="street" string="Address"/>
+                  <div class="o_address_format">
+                      <field name="address_1" placeholder="Street..." class="o_address_street"/>
+                      <field name="address_2" placeholder="Street 2..." class="o_address_street"/>
+                      <field name="cluster" placeholder="City" class="o_address_city"/>
+                      <field name="country" placeholder="Country" class="o_address_country" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                      <field name="home_description" placeholder="Home Description"/>
+                  </div>
+              </group>
+              <group>
+                  <field name="owner_id" options="{&quot;no_create&quot;: True}"/>
+                  <field name="odoo_id" force_save="1"/>
+                  <field name="distribution_name"/>
+                  <field name="contractual_name"/>
+                  <field name="interior_area"/>
+                  <field name="exterior_area"/>
+                  <field name="zoning_number"/>
+                  <field name="zoning_section"/>
+                  <field name="zoning_area"/>
+              </group>
+              </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+  <!-- form view of contracts -->
+    <record model="ir.ui.view" id="p7_contracts_form">
+        <field name="name">Contracts</field>
+        <field name="model">p7.contracts</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                      <group>
+                          <field name="name"/>
+                          <field name="begin_date"/>
+                          <field name="notice_period"/>
+                          <field name="deposit"/>
+                          <field name="variable_base"/>
+                          <field name="vat_rate" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                          <field name="expense_water"/>
+                          <field name="expense_internet"/>
+                          <field name="owner_use"/>
+                      </group>
+                      <group>
+                          <field name="home_id" options="{&quot;no_create&quot;: True}"/>
+                          <field name="end_date"/>
+                          <field name="break_possibility"/>
+                          <field name="fixed_annual_rent_ht"/>
+                          <field name="variable_percentage"/>
+                          <field name="expense_electricity"/>
+                          <field name="expense_gas"/>
+                          <field name="expense_ownershiptax"/>
+                          <field name="attachment" widget="many2many_binary"/>
+                      </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+  <!-- form view of rent payment -->
+    <record model="ir.ui.view" id="p7_rent_form">
+        <field name="name">Rent Payments</field>
+        <field name="model">rent.payments</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                      <group>
+                          <field name="contract_id" options="{&quot;no_create&quot;: True}"/>
+                          <field name="rent_date"/>
+                          <field name="name"/>
+                      </group>
+                      <group>
+                          <field name="amount_ht"/>
+                          <field name="amount_vat"/>
+                          <field name="amount_ttc"/>
+                          <field name="attachment" widget="many2many_binary"/>
+                      </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+  
+  <!-- form view of variable.expense.estimate -->
+    <record model="ir.ui.view" id="p7_variable_form">
+        <field name="name">Variable Expense Estimate</field>
+        <field name="model">variable.expense.estimate</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                    <group>
+                        <field name="home_id" options="{&quot;no_create&quot;: True}"/>
+                        <field name="welcome_pack"/>
+                        <field name="cleaning_per_stay"/>
+                    </group>
+                    <group>
+                        <field name="linen_per_stay"/>
+                        <field name="mid_week_per_stay"/>
+                        <field name="hot_tub_per_stay"/>
+                    </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+  
+  <!-- form view of fixed.expense.estimate -->
+    <record model="ir.ui.view" id="p7_expense_form">
+        <field name="name">fixed.expense.estimate</field>
+        <field name="model">fixed.expense.estimate</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                    <group>
+                        <field name="home_id" options="{&quot;no_create&quot;: True}"/>
+                    </group>
+                    <group>
+                        <field name="counci_tax" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                        <field name="sejour_tax" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                        <field name="rubbish_tax" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                    </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+  <!-- form view of Property expense -->
+    <record model="ir.ui.view" id="p7_property_form">
+        <field name="name">Property Expense</field>
+        <field name="model">property.expense</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                      <group>
+                          <field name="name" />
+                          <field name="contract_id" options="{&quot;no_create&quot;: True}"/>
+                          <field name="amount_ht"/>
+                          <field name="amount_ttc"/>
+                          <field name="type"/>
+                          <field name="status"/>
+                      </group>
+                      <group>
+                          <field name="supplier"/>
+                          <field name="odoo_id" options="{&quot;no_create&quot;: True}"/>
+                          <field name="vat_rate"/>
+                          <field name="currency" options="{&quot;no_create&quot;: True}"/>
+                          <field name="account"/>
+                          <field name="attachment" widget="many2many_binary"/>
+                      </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+
+
+  <!-- Owner action -->
+    <record model="ir.actions.act_window" id="p7_owner_action_window">
+      <field name="name">Owners</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">p7.owner</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+  <!-- Home Action -->
+
+    <record model="ir.actions.act_window" id="p7_home_action_window">
+      <field name="name">Home</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">p7.home</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+  <!-- Contract Action -->
+
+    <record model="ir.actions.act_window" id="p7_contracts_action_window">
+      <field name="name">Contracts</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">p7.contracts</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+  <!-- Rent Payments action -->
+    <record model="ir.actions.act_window" id="p7_rent_action_window">
+      <field name="name">Rent Payments</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">rent.payments</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+  <!-- Variable Expense Estimate action -->
+    <record model="ir.actions.act_window" id="p7_variable_action_window">
+      <field name="name">Variable Expense Estimate</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">variable.expense.estimate</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+  
+
+  <!-- Variable Expense Estimate action -->
+    <record model="ir.actions.act_window" id="p7_expense_action_window">
+      <field name="name">Fixed Expense Estimate</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">fixed.expense.estimate</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+  
+  <!-- Property Expense action -->
+    <record model="ir.actions.act_window" id="p7_property_action_window">
+      <field name="name">Property Expense</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">property.expense</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <menuitem name="Owner App" 
+              id="p7_owner_menu_root" 
+              groups="p7_commercial.p7_odoo_group"
+              web_icon="p7_commercial,static/description/home.png"/>
+
+    <menuitem id="menu_contract_config"
+        parent="p7_owner_menu_root"
+        name="Configuration"
+        groups="p7_commercial.p7_odoo_group"
+        sequence="4"/>
+
+  <!-- Owner menu -->
+    <menuitem id="menu_p7_owner"
+        parent="p7_owner_menu_root"
+        name="Owners"
+        groups="p7_commercial.p7_odoo_group"
+        action="p7_owner_action_window"
+        sequence="1"/>
+
+  <!-- Home menu -->
+    <menuitem id="menu_p7_home"
+        parent="p7_owner_menu_root"
+        name="Homes"
+        groups="p7_commercial.p7_odoo_group"
+        action="p7_home_action_window"
+        sequence="2"/>
+
+  <!-- Contract Menu -->
+
+    <menuitem id="menu_p7_contracts"
+        parent="p7_owner_menu_root"
+        name="Contracts"
+        groups="p7_commercial.p7_odoo_group"
+        action="p7_contracts_action_window"
+        sequence="3"/>
+  
+
+  <!-- Config menus -->
+    <menuitem id="menu_p7_property"
+        parent="menu_contract_config"
+        name="Property Expense"
+        groups="p7_commercial.p7_odoo_group"
+        action="p7_property_action_window"
+        sequence="1"/>
+    
+    <menuitem id="menu_p7_rent"
+        parent="menu_contract_config"
+        name="Rent Payments"
+        groups="p7_commercial.p7_odoo_group"
+        action="p7_rent_action_window"
+        sequence="2"/>
+
+    <menuitem id="menu_p7_variable"
+        parent="menu_contract_config"
+        name="Variable Expense Estimate"
+        groups="p7_commercial.p7_odoo_group"
+        action="p7_variable_action_window"
+        sequence="3"/>
+
+    <menuitem id="menu_p7_expense"
+        parent="menu_contract_config"
+        name="Fixed Expense Estimate"
+        groups="p7_commercial.p7_odoo_group"
+        action="p7_expense_action_window"
+        sequence="4"/>
+
+
+  </data>
+</odoo>
