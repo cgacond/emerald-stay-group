@@ -105,7 +105,8 @@
                         
 
                     </table>
-                    <strong><p><span t-esc="o.design_line_item(o)['label3']"/></p></strong>
+                    <!-- <strong><p><span t-esc="o.design_line_item(o)['label3']"/></p></strong> -->
+                    <strong><p>Deductions (article 5 of rent agreement)</p></strong>
 
 
                     <table class="table table-condensed" name="invoice_line_table">
