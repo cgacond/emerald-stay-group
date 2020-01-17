@@ -139,6 +139,19 @@
     </record>
 
 
+  <!-- Tree view of P7 Tax -->
+    <record model="ir.ui.view" id="p7_tax_tree">
+      <field name="name">Tax</field>
+      <field name="model">p7.tax</field>
+      <field name="arch" type="xml">
+          <tree>
+            <field name="name"/>
+            <field name="currency_id"/>
+          </tree>
+      </field>
+    </record>
+
+
     <!-- Form view of owner -->
     <record model="ir.ui.view" id="p7_owner_form">
       <field name="name">Owners</field>
@@ -257,6 +270,8 @@
                       <group>
                           <field name="name"/>
                           <field name="begin_date"/>
+                          <field name="payment_date"/>
+                          <field name="periodicity"/>
                           <field name="notice_period"/>
                           <field name="deposit"/>
                           <field name="variable_base"/>
@@ -268,6 +283,7 @@
                       <group>
                           <field name="home_id" options="{&quot;no_create&quot;: True}"/>
                           <field name="end_date"/>
+                          <field name="next_payment_date" force_save="1"/>
                           <field name="break_possibility"/>
                           <field name="fixed_annual_rent_ht"/>
                           <field name="variable_percentage"/>
@@ -387,7 +403,25 @@
         </field>
     </record>
 
-
+  <!-- form view of fixed.expense.estimate -->
+    <record model="ir.ui.view" id="p7_tax_form">
+        <field name="name">p7.tax</field>
+        <field name="model">p7.tax</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <field name="currency_id"/>
+                    </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
 
   <!-- Owner action -->
@@ -446,6 +480,14 @@
       <field name="name">Property Expense</field>
       <field name="type">ir.actions.act_window</field>
       <field name="res_model">property.expense</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+  
+  <!-- Property Expense action -->
+    <record model="ir.actions.act_window" id="p7_tax_action_window">
+      <field name="name">Tax</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">p7.tax</field>
       <field name="view_mode">tree,form</field>
     </record>
 
@@ -515,6 +557,13 @@
         groups="p7_commercial.p7_odoo_group"
         action="p7_expense_action_window"
         sequence="4"/>
+    
+    <menuitem id="menu_p7_tax"
+        parent="menu_contract_config"
+        name="Tax"
+        groups="p7_commercial.p7_odoo_group"
+        action="p7_tax_action_window"
+        sequence="5"/>
 
 
   </data>

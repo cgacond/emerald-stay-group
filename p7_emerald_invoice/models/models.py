@@ -8,7 +8,7 @@ class Account_invoice_extended(models.Model):
 
     _inherit = 'account.invoice'
 
-
+    p7_property = fields.Char(string="Property")
 
     def get_analytic_name(self,inv):
         
@@ -45,16 +45,31 @@ class Account_invoice_extended(models.Model):
             if line.product_id.name.upper() == 'GROSS':
                 one['order'] = True
                 one['name'] = line.name
+                one['tax'] = []
+                for t in line.invoice_line_tax_ids:
+                    if t:
+                        one['tax'].append(str(t.amount) + ' ' + '%')        
+                one['tax'] = str(one['tax']).replace('[','')
+                one['tax'] = str(one['tax']).replace(']','')
+                one['tax'] = str(one['tax']).replace("'",'')
+                
                 one['amount'] = line.price_subtotal
                 gross_total += line.price_subtotal
                 l1_amt.append(one['amount'])
                 one_ans.append(one)
-
+        
             if line.product_id.name.upper() == 'MINUS':
                 
                 one['order'] = False
                 one['name'] = line.name
                 one['amount'] = line.price_subtotal
+                one['tax'] = []
+                for t in line.invoice_line_tax_ids:
+                    if t:
+                        one['tax'].append(str(t.amount) + ' ' + '%')        
+                one['tax'] = str(one['tax']).replace('[','')
+                one['tax'] = str(one['tax']).replace(']','')
+                one['tax'] = str(one['tax']).replace("'",'')
                 minus_total += abs(line.price_subtotal)
                 l1_amt.append((one['amount']))
                 one_ans.append(one)
@@ -65,6 +80,13 @@ class Account_invoice_extended(models.Model):
                 two['name'] = line.name
                 two['amount'] = line.price_subtotal
                 two['percentage'] = str(line.quantity * 100) + ' ' + '%'
+                two['tax'] = []
+                for t in line.invoice_line_tax_ids:
+                    if t:
+                        two['tax'].append(str(t.amount) + ' ' + '%')        
+                two['tax'] = str(two['tax']).replace('[','')
+                two['tax'] = str(two['tax']).replace(']','')
+                two['tax'] = str(two['tax']).replace("'",'')
                 two_ans.append(two)
 
             
@@ -72,6 +94,13 @@ class Account_invoice_extended(models.Model):
             if line.product_id.name.upper() == 'DEDUCTIONS':
                 three['name'] = line.name
                 three['amount'] = line.price_subtotal
+                three['tax'] = []
+                for t in line.invoice_line_tax_ids:
+                    if t:
+                        three['tax'].append(str(t.amount) + ' ' + '%')        
+                three['tax'] = str(three['tax']).replace('[','')
+                three['tax'] = str(three['tax']).replace(']','')
+                three['tax'] = str(three['tax']).replace("'",'')
                 three_ans.append(three)
                 count_of_d += 1
                 t_vat.append(three['amount'])
@@ -97,19 +126,13 @@ class Account_invoice_extended(models.Model):
                 counter.update(d) 
                 
             result = dict(counter) 
-      
+        print("----------------",result)
         total_vat = 0
         if result != None:
 
             for x,y in zip(result.keys(),result.values()):
                 total_vat += y
-                tax_dicts.append({'name':'VAT' +' ' + self.env['account.tax'].sudo().browse(x).name,'amount':y})
-
-        
-            
-
-
-
+                tax_dicts.append({'name':'VAT' +' ' + self.env['account.tax'].sudo().browse(x).name,'amount':y,'into':round((100 / self.env['account.tax'].sudo().browse(x).amount) * y, 2)})
 
 
 
@@ -147,8 +170,10 @@ class Account_invoice_extended(models.Model):
         if t_dicts:
 
             ans['label5'] = tax_dicts
+
+          
         else:
-            ans['label5'] = [{'name':'VAT 0' ,'amount':0}]
+            ans['label5'] = [{'name':'VAT 0' ,'amount':0,'into':0}]
 
         ans['label6'] = [{'name':'Total including VAT','amount': round(tot_ex_vat + total_vat,2)}]
 

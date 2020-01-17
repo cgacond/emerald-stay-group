@@ -22,8 +22,9 @@
                         <p><strong>Period:</strong> <span t-field="o.reference"/></p>
                     </div>
          
-                    <div class="" t-if="o.invoice_line_ids" name="property">
-                        <p><strong>Property:</strong> <span t-esc="o.get_analytic_name(o)"/></p>
+                    <div class="" t-if="o.p7_property" name="property">
+                        <!-- <p><strong>Property:</strong> <span t-esc="o.get_analytic_name(o)"/></p> -->
+                        <p><strong>Property: <span t-esc="o.p7_property"/></strong></p>
                     </div>
 
                     <div t-if="o.date_invoice" name="date_invoice">
@@ -35,7 +36,13 @@
                     <table class="table table-condensed" name="invoice_line_table">
                         <thead>
                             <tr>
-                                
+                               <td><strong>Description</strong></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                               <td><strong>Unit</strong></td>
+                               <td><strong>Vat %</strong></td>
+                               <td style="text-align:right"><strong>Amount</strong></td>
                             </tr>
                         </thead>
                         <tbody class="invoice_tbody">
@@ -49,7 +56,7 @@
                                         <td></td>
                                         <td></td>
                                         <td></td>
-                                        <td></td>
+                                        <td><span t-esc="line['tax']"/></td>
                                         <td class="text-right o_price_total">
                                             <span t-esc="line['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                         </td>
@@ -76,9 +83,10 @@
                                     <td><span t-esc="line['name']"/></td>
                                     <td></td>
                                     <td></td>
-                                    <td></td>
+                                    
                                     <td></td>
                                     <td><span t-esc="line['percentage']"/></td>
+                                    <td><span t-esc="line['tax']"/></td>
                                     <td class="text-right o_price_total">
                                         <span t-esc="line['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                     </td>
@@ -118,7 +126,7 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td></td>
+                                    <td><span t-esc="line['tax']"/></td>
                                     <td class="text-right o_price_total">
                                         <span t-esc="line['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                     </td>
@@ -142,7 +150,7 @@
                             <t t-foreach="o.design_line_item(o)['label5']" t-as="line">
                               
                                 <tr>
-                                    <td><span t-esc="line['name']"/></td>
+                                    <td><span t-esc="line['name']"/> on the amount of  <span t-esc="line['into']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>

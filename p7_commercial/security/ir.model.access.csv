@@ -8,3 +8,4 @@ access_rent_payments,Rent Payments,p7_commercial.model_rent_payments,,1,1,1,1
 access_variable_expense_estimate,Variable Expense Estimate,p7_commercial.model_variable_expense_estimate,,1,1,1,1
 access_fixed_expense_estimate,Fixed Expense Estimate,p7_commercial.model_fixed_expense_estimate,,1,1,1,1
 access_property_expense,Property Expense,p7_commercial.model_property_expense,,1,1,1,1
+access_p7_tax,P7 Tax,p7_commercial.model_p7_tax,,1,1,1,1

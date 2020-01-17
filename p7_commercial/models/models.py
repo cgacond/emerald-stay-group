@@ -2,6 +2,7 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import AccessError, UserError, ValidationError
+from dateutil.relativedelta import relativedelta
 
 # Owner details
 
@@ -80,9 +81,6 @@ class P7_owner(models.Model):
             
 
         if vendor:
-            if not self.bank_ids:
-
-                raise UserError(_('Please fill the bank details'))
 
             self.partner_id = vendor.id
             self.is_partner = True
@@ -120,8 +118,8 @@ class P7_res_bank(models.Model):
 
     _description = "Gathering bank details for vendor creation"
 
-    bank_id = fields.Many2one('res.bank', string="Bank", required=True)
-    acc_number = fields.Char(string="Account Number", required=True)
+    bank_id = fields.Many2one('res.bank', string="Bank")
+    acc_number = fields.Char(string="Account Number")
     owner_id = fields.Many2one('p7.owner', string="Owner")
 
 
@@ -143,7 +141,7 @@ class P7_home(models.Model):
     distribution_name = fields.Char(string="Distribution Name", required=True)
     contractual_name = fields.Char(string="Contractual Name", required=True)
     address_1 = fields.Char(string="Address", required=True)
-    address_2 = fields.Char(string="Address 2", required=True)
+    address_2 = fields.Char(string="Address 2")
     cluster = fields.Char(string="Cluster", required=True)
     country = fields.Many2one('res.country', string="Country", required=True)
     interior_area = fields.Char(string="Interior Area")
@@ -170,6 +168,9 @@ class P7_contracts(models.Model):
     name = fields.Char(string="Contracts Name", required=True)
     home_id = fields.Many2one('p7.home', string="Home", required=True)
     begin_date = fields.Date(string="Begin Date",required=True)
+    payment_date = fields.Date(string="Starting date of payment",required=True)
+    next_payment_date = fields.Date(string="Next payment date",readonly=True)
+    periodicity = fields.Selection([('month','Per Month'),('quarter','Per Quarter'),('year','Per Year')],required=True)
     end_date = fields.Date(string="End Date", required=True)
     notice_period = fields.Integer(string="Notice Period")
     break_possibility = fields.Char(string="Break Possibility")
@@ -202,6 +203,34 @@ class P7_contracts(models.Model):
             'owner_id': res.home_id.owner_id.id
         })
         return res
+
+
+    @api.onchange('periodicity')
+    def checking_periodicity(self):
+
+
+        if self.periodicity:
+            if not self.payment_date:
+                raise UserError(_('Please choose the Starting date of payment'))
+            
+            else:
+                
+                if self.periodicity == 'month':
+
+                    self.next_payment_date = self.payment_date + relativedelta(months=1)
+                    
+                elif self.periodicity == 'quarter':
+
+                    self.next_payment_date = self.payment_date + relativedelta(months=3)
+                    
+                elif self.periodicity == 'year':
+                    
+                    self.next_payment_date = self.payment_date + relativedelta(months=12)
+
+                else:
+                    pass
+    
+    
         
 # Below are Configuration Masters
 
@@ -249,9 +278,9 @@ class P7_fixed_expense_estimate(models.Model):
 
     name = fields.Char()
     home_id = fields.Many2one('p7.home', string="Home", required=True)
-    counci_tax = fields.Many2one('account.tax', string="Counci Tax")
-    sejour_tax = fields.Many2one('account.tax', string="Sejour Tax")
-    rubbish_tax = fields.Many2one('account.tax', string="Rubbish Tax")
+    counci_tax = fields.Many2one('p7.tax', string="Counci Tax")
+    sejour_tax = fields.Many2one('p7.tax', string="Sejour Tax")
+    rubbish_tax = fields.Many2one('p7.tax', string="Rubbish Tax")
 
 
 
@@ -275,4 +304,33 @@ class P7_property_expense(models.Model):
     account = fields.Selection([('owner','Owner'),('emerald','Emerald')])
     status = fields.Selection([('added','Added'),('done','Done')])
     attachment = fields.Many2many('ir.attachment','property_attachment_rel','aid','pid', string="PDF Upload")
+
+
+
+class P7_tax(models.Model):
+
+    _name = 'p7.tax'
+
+    _description = "This is a customized tax table for Fixed Expense Estimate"
+
+    _sql_constraints = [('name_unique', 'unique(name)', 'Already this vat value is exist!')]
+
+
+    name = fields.Float(string="Vat Value", required=True)
+    currency_id = fields.Many2one('res.currency', string="Currency", default=lambda self : self.env.user.company_id.currency_id.id, required=True)
+
+
+
+    @api.multi
+    def name_get(self):
+
+        if 1 == 1 :
+            res = []
+            for tax in self:
+                if tax.name and tax.currency_id:
+                    name = '%s  %s' % (str(tax.name), str(tax.currency_id.name))
+               
+                res.append((tax.id, name))
+            return res
+        return super(P7_tax, self).name_get()
 

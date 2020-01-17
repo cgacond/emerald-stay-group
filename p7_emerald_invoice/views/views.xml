@@ -11,5 +11,20 @@
             attachment="(object.state in ('open','in_payment','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
             print_report_name="(object._get_report_base_filename())"
         />
+
+    <!-- Adding new field in vendor form -->
+    <record model="ir.ui.view" id="p7_vednor_bills_inherited_for_property">
+        <field name="name">p7.vendors.bill.property</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="arch" type="xml">
+
+          <xpath expr="//field[@name='vendor_bill_id']" position="after">
+            <field name="p7_property"/>
+          </xpath>
+        </field>
+      </record>
+
+
   </data>
 </odoo>
