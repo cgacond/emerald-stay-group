@@ -126,13 +126,23 @@ class Account_invoice_extended(models.Model):
                 counter.update(d) 
                 
             result = dict(counter) 
-        print("----------------",result)
+        
         total_vat = 0
         if result != None:
 
             for x,y in zip(result.keys(),result.values()):
                 total_vat += y
-                tax_dicts.append({'name':'VAT' +' ' + self.env['account.tax'].sudo().browse(x).name,'amount':y,'into':round((100 / self.env['account.tax'].sudo().browse(x).amount) * y, 2)})
+
+                if self.env['account.tax'].sudo().browse(x).amount != 0:
+                    
+                    pass_to = {'name':'VAT' +' ' + self.env['account.tax'].sudo().browse(x).name,'amount':y,'into':round((100 / self.env['account.tax'].sudo().browse(x).amount) * y, 2)}
+
+                else:
+                    pass_to = {'name':'VAT' +' ' + self.env['account.tax'].sudo().browse(x).name,'amount':y,'into':0}
+
+
+            
+                tax_dicts.append(pass_to)
 
 
 
