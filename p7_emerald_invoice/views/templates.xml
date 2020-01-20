@@ -28,8 +28,8 @@
                     <table class="table table-sm o_main_table" name="invoice_line_table">
                         <thead>
                             <tr>
-                                <t t-set="colspan" t-value="5"/>
-                                <th class="text-left" width="5%"><strong>Description</strong></th>
+                                
+                                <th class="text-left"><strong>Description</strong></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -122,7 +122,7 @@
                             <t t-foreach="o.design_line_item(o)['label4']" t-as="line">
                               
                                 <tr>
-                                    <t t-set="colspan" t-value="5"/>
+                                    
                                     <td><strong><span t-esc="line['name']"/></strong></td>
                                     <td></td>
                                     <td></td>
@@ -137,7 +137,7 @@
                             <t t-foreach="o.design_line_item(o)['label5']" t-as="line">
                               
                                 <tr>
-                                    <t t-set="colspan" t-value="5"/>
+                                    
                                     <td><span t-esc="line['name']"/> on the amount of  <span t-esc="line['into']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
                                     <td></td>
                                     <td></td>
