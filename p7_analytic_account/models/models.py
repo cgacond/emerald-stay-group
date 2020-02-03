@@ -83,8 +83,11 @@ class P7_hr_expense(models.Model):
     def onchange_account_id(self):
 
         if self.account_id:
-            if self.account_id.user_type_id.name in ['Other Income','Income','Depreciation','Expenses','Cost of Revenue']:
+            print("-if account---------")
+            if self.account_id.sudo().user_type_id.name in ['Other Income','Income','Depreciation','Expenses','Cost of Revenue']:
+                print("-if condition---------")
                 self.is_pl = True
             else:
+                print("-else account---------")
                 self.is_pl = False
         
